@@ -1,0 +1,58 @@
+/*--------------------------------------------------------------
+# About
+--------------------------------------------------------------*/
+.about {
+  padding: 1em 30px;
+}
+.about .title h1 {
+  text-align: center;
+  font-weight: 700;
+  font-size: 35px;
+  color: #553580;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+  font-family: 'Poppins', sans-serif;
+}
+.about .caption p {
+  font-size: 18px;
+  text-indent: 3em;
+  padding: 30px;
+  color: #553580;
+  background: rgba(85, 53, 128, 0.22);
+  border-radius: 12px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.about .tujuan {
+  padding: 15px;
+  margin-top: 40px;
+  font-family: 'Poppins', sans-serif;
+  background: rgba(85, 53, 128, 0.22);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.about .tujuan h2 {
+  margin-top: 30px;
+  font-weight: 700;
+  font-size: 26px;
+  color: #553580;
+  padding-left: 30px;
+}
+
+.about .content ul li {
+  color: #553580;
+  font-size: 18px;
+  list-style: circle;
+  font-family: 'Poppins', sans-serif;
+}
+.about .content ul i {
+  font-size: 20px;
+  padding-right: 4px;
+  color: #553580;
+}
+.about .content p:last-child {
+  margin-bottom: 0;
+}

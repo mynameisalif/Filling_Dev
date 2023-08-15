@@ -1,0 +1,35 @@
+.container-filter{
+    width: 100vw;
+    height: 60px;
+    // background-color: red;
+    padding: 1em 2em;
+    box-sizing: border-box;
+    h1{
+        font-size: 25px;
+        font-weight: 300;
+    }
+}
+.container-workshop{
+    width: 100vw;
+    height: 100vh;
+    padding: 2em;
+    // display: flex;
+    // flex-direction: column;
+    // gap: 1em;
+    // justify-content: space-evenly   ;
+    
+    box-sizing: border-box;
+    // span{
+    //     font-size: 18px;
+    // }
+}
+
+.body-workshop{
+    width: 100%;
+    // height: 350px;  
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start     ;
+    overflow-x: auto;
+}

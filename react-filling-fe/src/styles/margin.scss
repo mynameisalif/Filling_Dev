@@ -1,0 +1,38 @@
+@mixin margin($value, $unit: px) {
+    margin: #{$value}#{$unit};
+}
+
+@mixin margin-auto {
+    margin: auto;
+}
+
+// Generate margin classes in pixels (px)
+@for $i from 1 through 20 {
+    .m#{$i} {
+        @include margin($i);
+    }
+}
+
+// Generate margin classes in ems (em)
+@for $i from 1 through 20 {
+    .m#{$i}em {
+        @include margin($i, em);
+    }
+}
+
+// Generate margin classes in rems (rem)
+@for $i from 1 through 20 {
+    .m#{$i}rem {
+        @include margin($i, rem);
+    }
+}
+
+.m-auto {
+    @include margin-auto;
+}
+
+
+// <div class="m10">Content with 10px margin</div>
+// <div class="m5em">Content with 5em margin</div>
+// <div class="m2rem">Content with 2rem margin</div>
+// <div class="m-auto">Content with auto margin</div>

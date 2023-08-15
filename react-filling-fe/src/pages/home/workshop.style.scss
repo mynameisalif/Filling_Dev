@@ -1,0 +1,75 @@
+
+  
+  .container-workshop-home {
+    width: 90%;
+    margin: auto;
+    height: 500px;
+    margin-bottom: 200px;
+    position: relative;
+    // background-color: red;
+    h1{
+        text-align: center;
+        font-weight: 700;
+        font-size: 35px;
+        color: #553580;
+        text-transform: uppercase;
+        margin-bottom: 30px;
+        font-family: 'Poppins', sans-serif;
+    }
+  }
+  
+  .cards-container {
+    display: flex;
+    border-radius: 6px;
+    // background-color: blue !important;
+    color: #333;
+    background: transparent;
+    padding: 1rem;
+    // box-shadow: 0 0 1rem #000 inset;
+    overflow-x: auto;
+    position: relative;
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  
+  .card {
+    flex: 1 0 250px;
+    box-shadow: 0 1px 1rem -4px #000;
+    background: #fff;
+    margin: 1rem;
+    overflow: hidden;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 250ms ease-in-out;
+    
+    img {
+      width: 250px;
+      height: 250px;
+      object-fit: center;
+    }
+    
+    &:hover {
+      box-shadow: 0 4px 1rem -4px #000;
+      transform: translateY(-3px);
+    }
+  }
+  
+  .card-content {
+    padding: 1rem;
+  }
+  
+  @media screen and (max-width: 625px) {
+    .container {
+      width: 100%
+    }
+    
+    .cards-container {
+      padding: .5rem;
+    }
+    
+    .card {
+      margin: .5rem;
+    }
+  }

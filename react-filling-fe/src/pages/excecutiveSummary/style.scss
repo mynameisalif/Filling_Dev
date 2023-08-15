@@ -1,0 +1,128 @@
+.container-excecutive{
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    // position: relative;
+    // overflow-y: auto;
+
+    .body-red{
+        padding: 24px;
+        width: 100%;
+        height: 240px;
+        position: relative;
+        background-color: #e22035;
+    }
+}
+
+
+.container-coreboardband{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 25px;
+    padding-bottom: 2em;
+}
+
+.container-map-excecutive{
+    width: 600px;
+    height: 270px;
+    background-color: transparent;
+    position: relative;
+    .header-map{
+        width: 181px;
+        height: 30px;
+        color: #fff;
+        background-color: #D31027;
+        margin-left: 1em;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        border-radius: 10px 60px 10px 10px;
+        span{
+            text-align: center;
+        }
+    }
+    .body-maps{
+        width: 100%;
+        height: 100%;
+        padding: 0.5em 2em;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+}
+
+
+.container-summaryne-excecutive{
+    width: 100%;
+    height: 300px;
+    background-color: transparent;
+    position: relative;
+    .header-summaryne{
+        width: 181px;
+        height: 30px;
+        color: #fff;
+        background-color: #D31027;
+        margin-left: 1em;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        border-radius: 10px 60px 10px 10px;
+        span{
+            text-align: center;
+        }
+    }
+    .body-summaryne{
+        width: 100%;
+        height: 100%;
+        padding: 0.5em 2em;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+}
+
+.container-ne-excecutive{
+    width: 413px;
+    height: 270px;
+    background-color: transparent;
+    position: relative;
+    .header-ne{
+        width: 181px;
+        height: 30px;
+        color: #fff;
+        background-color: #D31027;
+        margin-left: 1em;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        border-radius: 10px 60px 10px 10px;
+        span{
+            text-align: center;
+        }
+    }
+    .body-ne{
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    }
+}
+
+
+
+.navigationPath{
+    color: white;
+}
+
+.navigationPath strong{
+    color: #FDA22B;
+}
+
+.titleHeader{
+    color: #FDA22B;
+}
+

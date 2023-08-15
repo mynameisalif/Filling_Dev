@@ -1,0 +1,53 @@
+/* Navbar Styles */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-links {
+  display: flex;
+  gap: 10px;
+}
+
+/* Hide the nav links on mobile */
+.nav-links.active {
+  display: none;
+}
+
+/* Styles for the menu icon */
+.menu-icon {
+  cursor: pointer;
+  display: none;
+}
+
+.menu-icon .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 6px 0;
+}
+
+.menu-icon.active .bar {
+  background-color: #a01996;
+}
+
+/* Media query for mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .nav-links.active {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background-color: #fff;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    z-index: 999;
+  }
+
+  .menu-icon {
+    display: block;
+  }
+}
