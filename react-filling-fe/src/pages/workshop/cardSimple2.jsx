@@ -1,9 +1,6 @@
-import React from "react";
-import { Card, Button , Image } from "antd";
-import { useNavigate } from "react-router-dom";
-import {truncateText} from "../../utils/useString"
+import { Card, Button, Image } from "antd";
+import { truncateText } from "../../utils/useString";
 
-const { Meta } = Card;
 const App = ({
   onBuy,
   onDetail,
@@ -17,7 +14,6 @@ const App = ({
   place = "jakarta",
   img = "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
 }) => {
-  const navigate = useNavigate();
   return (
     <Card
       hoverable
@@ -25,47 +21,59 @@ const App = ({
         margin: "1em",
         ...style,
       }}
-      cover={<Image alt="example"  style={{height:'250px'}}   src={img} />}
+      cover={<Image alt={title} style={{ height: '250px', objectFit: 'cover' }} src={img} />}
     >
-      <p
+      <div
         style={{
           display: "flex",
           alignItems: "center",
-          lineHeight: "0px",
           justifyContent: "space-between",
+          marginBottom: "8px",
         }}
       >
-        <p>Judul : {title}</p>
+        <span>Judul : {title}</span>
+        <span style={{ color: "rgba(0,0,0,0.5)", fontSize: "11px" }}>{`${tgl}, ${jam}`}</span>
+      </div>
 
-        <p
-          style={{ color: "rgba(0,0,0,0.5)", fontSize: "11px" }}
-        >{`${tgl}, ${jam}`}</p>
-
-        {/* <p>{Kuota : {kuota}}</p> */}
-      </p>
-      <p
+      <div
         style={{
           display: "flex",
-          lineHeight: "0px",
           justifyContent: "space-between",
+          marginBottom: "8px",
         }}
       >
-        <p>Harga (IDR) : {price}</p>
-        <p>Kuota : {kuota}</p>
-      </p>
+        <span>Harga (IDR) : {price}</span>
+        <span>Kuota : {kuota}</span>
+      </div>
 
-      <p>Tempat : {place} </p>
-      <p className="des">
-        {truncateText(description , 20)}
-        {description.length > 20 && <p id="more-link" onClick={()=>{onDetail()}}>selengkapnya</p>}
-        {description.length < 20 && <p id="more-link" onClick={()=>{onDetail()}}>&nbsp;&nbsp;detail</p>}
+      <div style={{ marginBottom: "8px" }}>Tempat : {place}</div>
 
-      </p>
-    
+      <div className="des">
+        <span>{truncateText(description, 20)}</span>
+        {description && description.length > 20 && (
+          <span
+            id="more-link"
+            style={{ color: '#1890ff', cursor: 'pointer', marginLeft: '6px' }}
+            onClick={() => onDetail && onDetail()}
+          >
+            selengkapnya
+          </span>
+        )}
+        {description && description.length <= 20 && (
+          <span
+            id="more-link"
+            style={{ color: '#1890ff', cursor: 'pointer', marginLeft: '6px' }}
+            onClick={() => onDetail && onDetail()}
+          >
+            detail
+          </span>
+        )}
+      </div>
+
       <Button
         style={{ marginTop: "1em", backgroundColor: "green", color: "white" }}
         onClick={() => {
-          onBuy();
+          if (onBuy) onBuy();
         }}
       >
         Buy
@@ -73,4 +81,5 @@ const App = ({
     </Card>
   );
 };
+
 export default App;

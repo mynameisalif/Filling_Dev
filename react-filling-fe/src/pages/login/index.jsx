@@ -5,7 +5,7 @@ import { Link , useNavigate } from "react-router-dom";
 import Wallpaper from "../../assets/img/wallpaper.jpg";
 import AuthStore from "../../stores/auth";
 import { setRememberMeData, getRememberMeData, clearRememberMeData } from '../../utils/useRemember';
-import { useSignIn , useIsAuthenticated } from 'react-auth-kit'
+import { useSignIn, useIsAuthenticated, useAuthUser } from 'react-auth-kit'
 import { MdOutlineArrowBack } from 'react-icons/md';
 
 
@@ -14,6 +14,7 @@ import { MdOutlineArrowBack } from 'react-icons/md';
 const Login = () => {
   const signIn = useSignIn()
   const isAuthenticated = useIsAuthenticated()
+  const auth = useAuthUser()
   const { roles,login } = AuthStore();
   const navigate = useNavigate()
   const [form] = Form.useForm();
@@ -24,7 +25,7 @@ const Login = () => {
   
 
   const onFinish = async (values) => {
-    const { username , password , remember } = values;
+    const { username } = values;
     setLoading(true);
     try {
        const rest = await login(values.username, values.password);
@@ -61,27 +62,34 @@ const Login = () => {
     }
   };
 
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = () => {
   };
 
-  const setupRememberMe = (remember) => {
-    setRememberMe(e.target.checked);
+  const setupRememberMe = (checked) => {
+    setRememberMe(checked);
+    if (!checked) {
+      clearRememberMeData();
+    }
   };
 
   useEffect(() => {
-
     if (isAuthenticated()) {
-      navigate(-1); // Redirect to dashboard    
+      const user = auth();
+      if (user?.role_id === roles.ADMIN) {
+        navigate("/app/workshop", { replace: true });
+      } else {
+        navigate("/user/workshop", { replace: true });
+      }
+      return;
     }
 
     const { rememberMeStatus, username: storedUsername } = getRememberMeData();
     form.setFieldsValue({
       username: storedUsername,
-      remember:      rememberMeStatus
-  }); 
+      remember: rememberMeStatus
+    }); 
     setRememberMe(rememberMeStatus);
-    
-  }, []);
+  }, [isAuthenticated, auth, roles, navigate, form]);
 
   return (
     <div className="login-page">
@@ -136,14 +144,7 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item name="remember" valuePropName="checked">
-            <Checkbox checked={rememberMe} onChange={()=>{
-                setupRememberMe(!rememberMeActive)
-                
-                if(!rememberMeActive ){
-                  clearRememberMeData();
-                }
-
-                }}>Remember me</Checkbox>
+            <Checkbox checked={rememberMe} onChange={(e) => setupRememberMe(e.target.checked)}>Remember me</Checkbox>
           </Form.Item>
 
           <Form.Item>

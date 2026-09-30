@@ -7,12 +7,22 @@ import fs from "fs";
 // Create a workshop
 export const createWorkshop = async (req, res) => {
   try {
-    const {filename} = req.file
-    const { nama, tanggal, jam, tempat, harga,kuota, img, deskripsi } = req.body;
-    const workshop = await Workshop.create({ nama, tanggal, jam, tempat,kuota , harga:Number(harga), img:filename, deskripsi });
+    const filename = req.file ? req.file.filename : null;
+    const { nama, tanggal, jam, tempat, harga, kuota, deskripsi } = req.body;
+    const workshop = await Workshop.create({ 
+      nama, 
+      tanggal, 
+      jam, 
+      tempat, 
+      kuota: kuota ? Number(kuota) : null, 
+      harga: harga ? Number(harga) : 0, 
+      img: filename, 
+      deskripsi 
+    });
     res.status(201).json(workshop);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to create workshop', error });
+    console.error("Error in createWorkshop:", error);
+    res.status(500).json({ error: 'Failed to create workshop', details: error.message });
   }
 };
 
@@ -81,43 +91,46 @@ export const getWorkshopById = async (req, res) => {
 // Update a workshop by ID
 export const updateWorkshopById = async (req, res) => {
   try {
-    let filename = ''
-
     const { id } = req.params;
-    const { nama, tanggal, jam, tempat, harga,kuota, img, deskripsi } = req.body;
-    const workshop = await Workshop.findOne({where:{id : id , deleted_at : null }});
-    if(!req.file) {
-      filename = workshop.img;
+    const { nama, tanggal, jam, tempat, harga, kuota, deskripsi } = req.body;
+    const workshop = await Workshop.findOne({ where: { id: id, deleted_at: null } });
+
+    if (!workshop) {
+      return res.status(404).json({ error: 'Workshop not found' });
     }
-    else {
-   
+
+    let filename = workshop.img;
+
+    if (req.file) {
+      filename = req.file.filename;
+
+      if (workshop.img) {
         const filepath = `./public/images/Workshop/${workshop.img}`;
- 
-        filename=req.file.filename
-
         if (fs.existsSync(filepath)) {
+          try {
             fs.unlinkSync(filepath);
+          } catch (unlinkErr) {
+            console.warn("Failed to delete previous image:", unlinkErr.message);
+          }
         }
-     
+      }
     }
 
-    if (workshop) {
-      workshop.nama = nama;
-      workshop.tanggal = tanggal;
-      workshop.jam = jam;
-      workshop.tempat = tempat;
-      workshop.harga = harga;
-      workshop.kuota = kuota; 
-      workshop.img = filename;
-      workshop.deskripsi = deskripsi;
-      workshop.updated_at = new Date();
-      await workshop.save();
-      res.status(200).json(workshop);
-    } else {
-      res.status(404).json({ error: 'Workshop not found' });
-    }
+    workshop.nama = nama;
+    workshop.tanggal = tanggal;
+    workshop.jam = jam;
+    workshop.tempat = tempat;
+    workshop.harga = harga ? Number(harga) : workshop.harga;
+    workshop.kuota = kuota ? Number(kuota) : workshop.kuota;
+    workshop.img = filename;
+    workshop.deskripsi = deskripsi;
+    workshop.updated_at = new Date();
+    await workshop.save();
+
+    res.status(200).json(workshop);
   } catch (error) {
-    res.status(500).json({ error: 'Failed to update workshop' , error });
+    console.error("Error in updateWorkshopById:", error);
+    res.status(500).json({ error: 'Failed to update workshop', details: error.message });
   }
 };
 

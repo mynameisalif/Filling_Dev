@@ -1,8 +1,6 @@
-import React from "react";
-import { Card, Button, Tag , Image } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Card, Button, Tag, Image } from "antd";
 import { truncateText } from "../../utils/useString";
-const { Meta } = Card;
+
 const statusCard = {
   Bayar: "Sudah bayar, Menunggu approval",
 };
@@ -10,9 +8,9 @@ const App = ({
   status,
   onDetail,
   onFeedback,
+  onCertificate,
   style,
   title = "workshop",
-  kuota = 10,
   description = "deskripsi",
   tgl = "2023-07-12",
   jam = "13:04:15",
@@ -20,7 +18,6 @@ const App = ({
   place = "jakarta",
   img = "https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png",
 }) => {
-  const navigate = useNavigate();
   return (
     <Card
       hoverable
@@ -81,11 +78,12 @@ const App = ({
       )}
 
       {status.toLowerCase() == "lunas" && (
-        <div style={{display:'flex' , gap:'10px' , alignItems:'center '}}>
+        <div style={{display:'flex' , gap:'8px' , alignItems:'center ', flexWrap: 'wrap'}}>
           <Tag color="green">
             {"Lunas"}
           </Tag>
           <Button
+            size="small"
             onClick={() => {
               onDetail();
             }}
@@ -93,11 +91,22 @@ const App = ({
              Detail
           </Button>
           <Button
+            size="small"
             onClick={() => {
               onFeedback();
             }}
           >
              Feedback
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            style={{ backgroundColor: "#553580", borderColor: "#553580" }}
+            onClick={() => {
+              onCertificate && onCertificate();
+            }}
+          >
+             🎓 E-Sertifikat
           </Button>
         </div>
       )}

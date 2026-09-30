@@ -1,45 +1,34 @@
-import React ,{useEffect , useState} from 'react'
-import "./style.scss"
-import { EditOutlined, EllipsisOutlined, SettingOutlined , SearchOutlined } from '@ant-design/icons';
-import { Avatar, Card , Modal , Row , Col  , Tag , QRCode , message} from 'antd';
-import { Input } from 'antd';
-import CardsSimple from "./cardSimple2"
+import { useEffect, useState } from 'react';
+import "./style.scss";
+import { Modal, Row, Col, QRCode, message } from 'antd';
+import CardsSimple from "./cardSimple2";
+import CertificateView from "../../components/certificate/CertificateView";
 import WorkshopStore from "../../stores/workshop";
 import FeedbackStore from "../../stores/feedback";
 
-import {useAuthUser} from 'react-auth-kit'
-import CommentForm from "./CommentForm"
-import ReviewList from "./review"
-import {BASEURLIMG} from "../../../config/config"
+import { useAuthUser } from 'react-auth-kit';
+import CommentForm from "./CommentForm";
+import ReviewList from "./review";
+import { BASEURLIMG } from "../../../config/config";
 
-
-const { Meta } = Card;
-
-
-const Index = ()=> {
-    const auth = useAuthUser()
-  const { getAll , deletes , getWorkshopPay } = WorkshopStore();
-  const { create:createFeedback } = FeedbackStore()
+const Index = () => {
+  const auth = useAuthUser();
+  const { getWorkshopPay } = WorkshopStore();
+  const { create: createFeedback } = FeedbackStore();
   
-  const [data , setData] = useState([])
-  const [updateFeedback , setUpdateFeedback] = useState("")
-
-  
-
+  const [data, setData] = useState([]);
+  const [updateFeedback, setUpdateFeedback] = useState("");
 
   useEffect(() => {
     initial();
   }, []);
 
   const initial = async () => {
-    // setLoading(true);
     const rest = await getWorkshopPay(auth().user_id);
-    setData(rest);
-    // setLoading(false);
+    setData(rest || []);
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [status, setStatus] = useState("");
   const [dataTmp, setDataTmp] = useState([]);   
   const showModal = () => {
     setIsModalOpen(true);
@@ -50,8 +39,6 @@ const Index = ()=> {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-
 
   const [isModalDetail, setIsModalDetail] = useState(false);
   const [dataDetail, setDataDetail] = useState([]);   
@@ -65,6 +52,9 @@ const Index = ()=> {
   const handleCancelDetail = () => {
     setIsModalDetail(false);
   };
+
+  const [isModalCert, setIsModalCert] = useState(false);
+  const [dataCert, setDataCert] = useState(null);
 
  
 
@@ -89,10 +79,14 @@ const Index = ()=> {
                 showModalDetail()
                 setDataDetail(card)
                }}
+               onCertificate = {()=>{
+                setDataCert(card);
+                setIsModalCert(true);
+               }}
                img={`${BASEURLIMG}/Workshop/${card.Workshop.img}`} 
                title={ card.Workshop.nama } 
                jam={card.Workshop.jam }
-               tgl={card.Workshoptanggal }
+               tgl={card.Workshop?.tanggal || card.Workshoptanggal }
                price={card.Workshop.harga}
                place={card.Workshop.tempat}
                kuota ={card.Workshop.kuota}
@@ -162,6 +156,18 @@ const Index = ()=> {
               <ReviewList workshopid={dataDetail.workshop_id} update={updateFeedback} userId={dataDetail.user_id}/>
           </Row>
 
+        </Modal>
+
+        <Modal 
+          title="E-Sertifikat Resmi Workshop" 
+          width={960} 
+          open={isModalCert} 
+          onCancel={() => setIsModalCert(false)} 
+          footer={null}
+          destroyOnClose
+          centered
+        >
+          {dataCert && <CertificateView data={dataCert} />}
         </Modal>
     </div>
     </>

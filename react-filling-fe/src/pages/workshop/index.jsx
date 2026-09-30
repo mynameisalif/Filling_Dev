@@ -98,7 +98,7 @@ const Index = () => {
             <Col span={24}>Tanggal : {dataTmp.tanggal}</Col>
             <Col span={24}>Jam : {dataTmp.jam}</Col>
             <Col span={24}>
-              Rekening (ABC) : <Tag color="magenta">12312321321</Tag>
+              Rekening (Mandiri) : <Tag color="magenta">1110017667862</Tag>
             </Col>
           </Row>
           <FormPayment onOk={handleOk} dataTmp={dataTmp} status={status} />

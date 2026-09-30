@@ -1,7 +1,6 @@
-import React from 'react'
-import { Route , Routes , Navigate} from "react-router-dom"
-import { RequireAuth , useIsAuthenticated} from 'react-auth-kit'
-import ProtectedRoute from "./guarded"
+import { Route, Routes, Navigate } from "react-router-dom";
+import { RequireAuth } from 'react-auth-kit';
+import ProtectedRoute from "./guarded";
 
 import DashboardLayout from "../layouts/dashboardLayout"
 import Attendance from "../pages/attendance"
@@ -23,6 +22,7 @@ import ProfilingForm from "../pages/profile"
 
 import LoginLayout from "../pages/login"
 import RegisterPage from "../pages/register"
+import CertificateVerifyPage from "../pages/certificate/verify"
 
 import AuthStore from "../stores/auth"
 
@@ -62,9 +62,11 @@ function index() {
                 <Route path="executive" element={<Excecutive></Excecutive>}></Route>          */}
             </Route>
 
-            <Route path="/login" exact element={<LoginLayout></LoginLayout>}></Route>
+            <Route path="/login" element={<LoginLayout></LoginLayout>}></Route>
             <Route path="/register" element={<RegisterPage></RegisterPage>}></Route>
             <Route path={"unauthorized"} element={<span>Unauthorize</span>} />
+            <Route path="/verify-certificate/:code" element={<CertificateVerifyPage />} />
+            <Route path="/certificate/:code" element={<CertificateVerifyPage />} />
 
     </Routes>
   )

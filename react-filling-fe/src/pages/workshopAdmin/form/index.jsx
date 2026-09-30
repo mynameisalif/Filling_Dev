@@ -1,40 +1,27 @@
-import { Button, Form, Input , message  , Select , Upload , DatePicker , TimePicker} from "antd";
-import React, { useState , useEffect } from "react";
+import { Button, Form, Input, message, Upload, DatePicker, TimePicker } from "antd";
+import { useState, useEffect } from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import WorkshopStore from "../../../stores/workshop";
-import TextArea from "antd/es/input/TextArea";
 import moment from "moment";
-
 
 const App = (props) => {
   const [form] = Form.useForm();
-  const {create , update} = WorkshopStore();
-  const [loading , setLoading] = useState(false)
+  const { create, update } = WorkshopStore();
+  const [loading, setLoading] = useState(false);
 
-
-  useEffect(()=>{
-    initial()
-    if(props.status == "edit"){
-        form.setFieldValue("nama" , props.dataTmp.nama);
-        form.setFieldValue("tanggal" , moment(props.dataTmp.tanggal));
-        form.setFieldValue("jam" , moment(props.dataTmp.jam , "HH:mm:ss"));
-        form.setFieldValue("tempat" , props.dataTmp.tempat);
-        form.setFieldValue("harga" , props.dataTmp.harga);
-        form.setFieldValue("kuota" , props.dataTmp.kuota);
-        form.setFieldValue("deskripsi" , props.dataTmp.deskripsi);    
-    }else{
+  useEffect(() => {
+    if (props.status === "edit" && props.dataTmp) {
+      form.setFieldValue("nama", props.dataTmp.nama);
+      form.setFieldValue("tanggal", moment(props.dataTmp.tanggal));
+      form.setFieldValue("jam", moment(props.dataTmp.jam, "HH:mm:ss"));
+      form.setFieldValue("tempat", props.dataTmp.tempat);
+      form.setFieldValue("harga", props.dataTmp.harga);
+      form.setFieldValue("kuota", props.dataTmp.kuota);
+      form.setFieldValue("deskripsi", props.dataTmp.deskripsi);
+    } else {
       form.resetFields();
     }
-   
-  }, [props.status , props.dataTmp])
-
-
-  const initial= async(r)=>{
-    try {     
-    } catch (error) {
-      
-    }
-  }
+  }, [props.status, props.dataTmp, form]);
 
   const normFile = (e) => {
     if (Array.isArray(e)) {
@@ -48,59 +35,54 @@ const App = (props) => {
     const isValid = isImage && file.size / 1024 / 1024 < 1; // Maximum file size of 1MB
     if (!isImage) {
       message.error('You can only upload image files!');
-    } else if (!isValid) {
-      message.error('Image size should be less than 1MB!');
+      return Upload.LIST_IGNORE;
     }
-    return isImage && isValid;
+    if (!isValid) {
+      message.error('Image size should be less than 1MB!');
+      return Upload.LIST_IGNORE;
+    }
+    return false; // Mencegah Ant Design auto-upload via AJAX ke URL 404
   };
 
 
   const onFinish = async(value) => {
-   
     const formData = new FormData();
   
     Object.entries(value).forEach(([key, values]) => {
       if(key === "img") {
-        formData.append("img" , values ?  values[0].originFileObj : null  )
-      }else if(key === "jam"){
-        
-        formData.append("jam" , moment(props.status === "edit" ? values : values.$d).format("HH:mm:ss") )
-      }else{
+        if (values && values.length > 0) {
+          const fileObj = values[0]?.originFileObj || values[0];
+          if (fileObj instanceof File || fileObj instanceof Blob) {
+            formData.append("img", fileObj);
+          }
+        }
+      } else if(key === "jam") {
+        const timeVal = props.status === "edit" ? values : (values?.$d || values);
+        formData.append("jam", moment(timeVal).isValid() ? moment(timeVal).format("HH:mm:ss") : values);
+      } else if(key === "tanggal") {
+        formData.append("tanggal", moment(values).isValid() ? moment(values).format("YYYY-MM-DD") : values);
+      } else if(values !== undefined && values !== null) {
         formData.append(key, values);
       }
-     
     });
-
 
     try {
-        setLoading(true)
+        setLoading(true);
        
         if(props.status === "edit"){
-            await update(props.dataTmp.id ,formData);
-            message.success("User updated successfully");
-        }else{
+            await update(props.dataTmp.id, formData);
+            message.success("Workshop updated successfully");
+        } else {
             await create(formData);
-            message.success("User created successfully");
+            message.success("Workshop created successfully");
         }
-       
-    
-        setLoading(false)
-        props.onOk()
+     
+        setLoading(false);
+        props.onOk();
     } catch (error) {
-        setLoading(false)
-        message.error(error);
+        setLoading(false);
+        message.error(error?.message || error || "Failed to update workshop");
     }
-   
-  };
-
-  const onFinishFailed = () => {
-    message.error("Submit failed!");
-  };
-
-  const onFill = () => {
-    form.setFieldsValue({
-      url: "https://taobao.com/",
-    });
   };
 
   return (

@@ -1,96 +1,136 @@
-import { Space, Table, Tag, Button, Modal, Popconfirm, message , Image } from "antd";
+import { Space, Table, Button, Modal, Popconfirm, message, Image } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Form from "./form";
-import KuotaForm from "./form/kuota";
 import { BsPencilSquare } from "react-icons/bs";
 import { AiFillDelete } from "react-icons/ai";
-import { MdProductionQuantityLimits } from "react-icons/md";
 import WorkshopStore from "../../stores/workshop";
 import moment from "moment";
-import {BASEURLIMG} from "../../../config/config"
-
-
-
-
+import { BASEURLIMG } from "../../../config/config";
 
 const App = () => {
-  const { getAll , deletes } = WorkshopStore();
+  const { getAll, deletes } = WorkshopStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isModalKuota, setIsModalKuota] = useState(false);
 
   const [data, setData] = useState([]);
-  const [columns, setColumn] = useState([]);
-
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
   const [dataTmp, setDataTmp] = useState([]);
 
+  const initial = useCallback(async () => {
+    setLoading(true);
+    try {
+      const rest = await getAll();
+      setData(rest || []);
+    } catch (err) {
+      message.error(err?.message || "Failed to fetch workshops");
+    } finally {
+      setLoading(false);
+    }
+  }, [getAll]);
 
   useEffect(() => {
     initial();
+  }, [initial]);
+
+  //confirm
+  const confirm = useCallback(
+    async (record) => {
+      try {
+        await deletes({ id: record.id });
+        message.success("Workshop deleted successfully");
+        initial();
+      } catch (error) {
+        message.error(error?.message || error || "Failed to delete workshop");
+      }
+    },
+    [deletes, initial]
+  );
+
+  const cancel = useCallback(() => {}, []);
+
+  const showModal = useCallback((modalStatus = "", modalData = []) => {
+    setStatus(modalStatus);
+    setDataTmp(modalData);
+    setIsModalOpen(true);
   }, []);
 
-  const initial = async () => {
-    setLoading(true);
-    const rest = await getAll();
-    setData(rest);
-    setLoading(false);
+  const handleOk = useCallback(() => {
+    setIsModalOpen(false);
+    initial();
+  }, [initial]);
 
-    const keys = Object.keys(rest[0]);
-    let columnsx = await keys.map((key) =>{
-      if(['updated_at', 'deleted_at'].includes(key)){
-       return null
-      }
-      if(key === "img"){
-        return {
-          title: (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g," "),
-          dataIndex: key,
-          key: key,
-          render: (text) => {
-            return ( 
-              <Image
-              width={100}
-              src={`${BASEURLIMG}/Workshop/${text}`}
-            />
-            )
-          },
-        }
-      }
-      if(['updated_at', 'created_at'].includes(key)){
-        return {
-          title: (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g," "),
-          dataIndex: key,
-          key: key,
-          render: (text) => {
-            return moment(text).format("DD-MM-YYYY");
-          },
-        }
-      }    
-      return {
-        title:(key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g," "),
-        dataIndex: key,
-        key: key,
-      }
-    } )
-  
-    columnsx = [
-      ...columnsx,
+  const handleCancel = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  const columns = useMemo(
+    () => [
+      {
+        title: "Id",
+        dataIndex: "id",
+        key: "id",
+      },
+      {
+        title: "Nama",
+        dataIndex: "nama",
+        key: "nama",
+      },
+      {
+        title: "Tanggal",
+        dataIndex: "tanggal",
+        key: "tanggal",
+      },
+      {
+        title: "Jam",
+        dataIndex: "jam",
+        key: "jam",
+      },
+      {
+        title: "Tempat",
+        dataIndex: "tempat",
+        key: "tempat",
+      },
+      {
+        title: "Harga",
+        dataIndex: "harga",
+        key: "harga",
+      },
+      {
+        title: "Kuota",
+        dataIndex: "kuota",
+        key: "kuota",
+      },
+      {
+        title: "Img",
+        dataIndex: "img",
+        key: "img",
+        render: (text) => (
+          <Image
+            width={100}
+            src={`${BASEURLIMG}/Workshop/${text}`}
+          />
+        ),
+      },
+      {
+        title: "Deskripsi",
+        dataIndex: "deskripsi",
+        key: "deskripsi",
+      },
+      {
+        title: "Created at",
+        dataIndex: "created_at",
+        key: "created_at",
+        render: (text) => (text ? moment(text).format("DD-MM-YYYY") : "-"),
+      },
       {
         title: "Action",
         key: "action",
         fixed: "right",
         render: (_, record) => (
           <Space size="middle">
-            
-            {/* <MdProductionQuantityLimits
-            style={{color:'violet'}}
-              onClick={() => {
-                showModalKuota("edit", record);
-              }}
-            /> */}
             <BsPencilSquare
-            style={{color:'olive'}}
+              style={{ color: "olive", cursor: "pointer" }}
               onClick={() => {
                 showModal("edit", record);
               }}
@@ -98,69 +138,21 @@ const App = () => {
             <Popconfirm
               title="Delete the workshop"
               description="Are you sure to delete this workshop?"
-              onConfirm={(e) => {
-                confirm(e, record);
+              onConfirm={() => {
+                confirm(record);
               }}
               onCancel={cancel}
               okText="Yes"
               cancelText="No"
             >
-              <AiFillDelete style={{color:'red'}} />
+              <AiFillDelete style={{ color: "red", cursor: "pointer" }} />
             </Popconfirm>
           </Space>
         ),
       },
-    ].filter(e=>e)
-
-    console.log(columnsx)
-
-    setColumn(columnsx)
-
-  };
-
-
-
- //confirm
- const confirm = async(e , record) => {
-  try {
-
-      await deletes({id:record.id});
-      message.success("Workshop deleted successfully");
-      initial()
-  } catch (error) {
-      message.error(error);
-  }
-  
-};
-  const cancel = (e) => {
-    // console.log(e);
-    // message.error("Click on No");
-  };
-
-  //endconfirm
-    
-  const showModalKuota = (status ="" , data =[]) => {
-    // setStatus(status)
-    // setDataTmp(data)
-    setIsModalKuota(true);
-  };
-  
-  const handleCancelKuota = () => {
-    setIsModalKuota(false);
-  };
-
-  const showModal = (status ="" , data =[]) => {
-    setStatus(status)
-    setDataTmp(data)
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-    initial();
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+    ],
+    [confirm, cancel, showModal]
+  );
 
   return (
     <div
@@ -180,15 +172,17 @@ const App = () => {
           }}
         >
           Workshop
-          <Button icon={<PlusOutlined />} type="primary"  onClick={showModal}>
+          <Button icon={<PlusOutlined />} type="primary" onClick={() => showModal("add")}>
             Add Data
           </Button>
         </span>
         <Table
+          loading={loading}
           columns={columns}
           dataSource={data}
           size="small"
           scroll={{ x: "max-content" }}
+          rowKey="id"
         />
       </Space>
       <Modal
@@ -197,22 +191,12 @@ const App = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
+        destroyOnClose={true}
       >
         <Form onOk={handleOk} dataTmp={dataTmp} status={status} />
       </Modal>
-
-      <Modal
-        title="Form Kuota"
-        open={isModalKuota}
-        onOk={handleOk}
-        onCancel={handleCancelKuota}
-        footer={null}
-      >
-        <KuotaForm onOk={handleOk} dataTmp={dataTmp} status={status} />
-      </Modal>
-
-      
     </div>
   );
 };
+
 export default App;

@@ -1,65 +1,72 @@
-import {create} from "zustand"
-import { devtools } from 'zustand/middleware'
+import { create } from "zustand";
+import { devtools } from 'zustand/middleware';
 import { paymentService } from '../services/paymentService';
-import {handleApiError} from "../utils/handleError"
+import { handleApiError } from "../utils/handleError";
 
-let useStore = (set => ({
- 
+let useStore = () => ({
   getAll: async () => {
     try {
-      const user = await paymentService.getAll();
-       return user
+      return await paymentService.getAll();
     } catch (error) {
-      console.error(error , 'error');
-      throw handleApiError(error)
+      console.error(error, 'error');
+      throw handleApiError(error);
     }
   },
   getPaymentApprove: async () => {
     try {
-      const user = await paymentService.getPaymentApprove();
-       return user
+      return await paymentService.getPaymentApprove();
     } catch (error) {
-      console.error(error , 'error');
-      throw handleApiError(error)
+      console.error(error, 'error');
+      throw handleApiError(error);
     }
   },
   checkUniqCode: async (uniq_code) => {
     try {
-      const user = await paymentService.checkUniqCode(uniq_code);
-       return user
+      return await paymentService.checkUniqCode(uniq_code);
     } catch (error) {
-      console.error(error , 'error');
-      throw handleApiError(error)
+      console.error(error, 'error');
+      throw handleApiError(error);
     }
   },
-  
   create: async (obj) => {
     try {
-      const user = await paymentService.create(obj);
+      await paymentService.create(obj);
     } catch (error) { 
-      throw handleApiError(error)
+      throw handleApiError(error);
     }
   },
-
-  update: async (id ,obj) => {
+  update: async (id, obj) => {
     try {
-      const user = await paymentService.update(id,obj);
+      await paymentService.update(id, obj);
     } catch (error) { 
-      throw handleApiError(error)
+      throw handleApiError(error);
     }
   },
-
   deletes: async (obj) => {
     try {
-      const user = await paymentService.deletes(obj);
+      await paymentService.deletes(obj);
     } catch (error) { 
-      throw handleApiError(error)
+      throw handleApiError(error);
     }
   },
- 
-}))
+  verifyAI: async (id) => {
+    try {
+      return await paymentService.verifyAI(id);
+    } catch (error) {
+      console.error(error, 'error verifyAI');
+      throw handleApiError(error);
+    }
+  },
+  getCertificate: async (code) => {
+    try {
+      return await paymentService.getCertificate(code);
+    } catch (error) {
+      console.error(error, 'error getCertificate');
+      throw handleApiError(error);
+    }
+  },
+});
 
-useStore = create(devtools(useStore))
+useStore = create(devtools(useStore));
 
-  
-export default useStore
+export default useStore;

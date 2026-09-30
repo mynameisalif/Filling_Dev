@@ -1,56 +1,36 @@
-
-
-import api  from './api';
+import api from './api';
 
 export const paymentService = {
   getAll: async () => {
-    try {
-      const {data} = await api.get('/payment');
-      return data;
-    } catch (error) {
-      throw error
-    }
+    const { data } = await api.get('/payment');
+    return data;
   },
   getPaymentApprove: async () => {
-    try {
-      const {data} = await api.get('/payment/list-approve');
-      return data;
-    } catch (error) {
-      throw error
-    }
+    const { data } = await api.get('/payment/list-approve');
+    return data;
   },
   checkUniqCode: async (uniq_code) => {
-    try {
-      const {data} = await api.get(`/payment/check-uniq-code/${uniq_code}`);
-      return data;
-    } catch (error) {
-      throw error
-    }
+    const { data } = await api.get(`/payment/check-uniq-code/${uniq_code}`);
+    return data;
   },
-  
   create: async (body) => {
-    try {
-      const {data} = await api.post('/payment', body , {headers : {   'Content-Type': 'multipart/form-data' } });
-      return data;
-    } catch (error) {
-      throw error
-    }
+    const { data } = await api.post('/payment', body, { headers: { 'Content-Type': 'multipart/form-data' } });
+    return data;
   },
-  update: async (id ,body) => {
-    try {
-      const {data} = await api.put(`/payment/${id}`, body ,  {headers : {   'Content-Type': 'multipart/form-data' } });
-      return data;
-    } catch (error) {
-      throw error
-    }
+  update: async (id, body) => {
+    const { data } = await api.put(`/payment/${id}`, body, { headers: { 'Content-Type': 'multipart/form-data' } });
+    return data;
   },
   deletes: async (body) => {
-    try {
-      const {data} = await api.delete(`/payment/${body.id}`, body);
-      return data;
-    } catch (error) {
-      throw error
-    }
+    const { data } = await api.delete(`/payment/${body.id}`, body);
+    return data;
   },
-  
+  verifyAI: async (id) => {
+    const { data } = await api.post(`/payment/verify-ai/${id}`);
+    return data;
+  },
+  getCertificate: async (code) => {
+    const { data } = await api.get(`/payment/certificate/${code}`);
+    return data;
+  },
 };

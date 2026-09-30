@@ -3,11 +3,16 @@ import express from "express";
 import { getAllWorkshops ,getWorkshopById ,createWorkshop ,getWorkshopPay,getWorkshopNotPay , updateWorkshopById , deleteWorkshopById} from "../controllers/workshop.js";
 import multer from 'multer';
 import path from 'path';
+import fs from 'fs';
 import { v4 as uuidv4 } from "uuid";
 const router = express.Router();
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'public/images/Workshop')
+      const dir = 'public/images/Workshop';
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      cb(null, dir);
     },
     filename: function (req, file, cb) {
       const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
