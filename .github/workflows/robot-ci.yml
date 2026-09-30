@@ -1,0 +1,20 @@
+name: Asisten Robot CI
+
+# Kapan robot ini harus bekerja?
+on:
+  push:
+    branches: [ "main" ]
+
+# Apa tugas si robot?
+jobs:
+  sapa-developer:
+    runs-on: ubuntu-latest # Robot akan menyewa komputer Linux sementara
+
+    steps:
+      # Langkah 1: Robot mengambil kodemu
+      - name: Mengambil kode terbaru dari GitHub
+        uses: actions/checkout@v4
+
+      # Langkah 2: Robot menjalankan perintah sederhana
+      - name: Memberi salam ke developer
+        run: echo "Halo Bos! Kode baru sudah saya terima dan lingkungan proyek berhasil disiapkan!"
